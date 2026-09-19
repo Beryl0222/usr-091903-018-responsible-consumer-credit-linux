@@ -25,10 +25,11 @@ class ServiceContractTest(unittest.TestCase):
         cls.thread.join(timeout=2)
 
     def test_health_payload_has_stable_identity(self):
-        self.assertEqual(
-            health_payload(),
-            {"status": "ok", "service": SERVICE_ID, "name": SERVICE_NAME},
-        )
+        payload = health_payload()
+        self.assertEqual(payload["service"], SERVICE_ID)
+        self.assertEqual(payload["name"], SERVICE_NAME)
+        self.assertEqual(payload["status"], "ok")
+        self.assertIn("api_version", payload)
 
     def test_health_endpoint_returns_json(self):
         with urlopen(f"{self.base_url}/health", timeout=2) as response:
